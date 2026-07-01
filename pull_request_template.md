@@ -1,4 +1,39 @@
-<!-- Congrats on creating an Awesome list! 🎉 -->
+#!/bin/bash
+# Noone Coin Deployment Script
+# Run with: bash scripts/deploy-token.sh
+
+set -e
+
+echo "🚀 Deploying Noone Coin ($NOONE)..."
+
+# Configuration
+TOKEN_NAME="Noone Coin"
+TOKEN_SYMBOL="NOONE"
+DECIMALS=9
+TOTAL_SUPPLY=1000000000  # 1 billion
+
+# Create token mint
+echo "Creating token mint..."
+MINT=$(spl-token create-token --decimals $DECIMALS | grep "Creating token" | awk '{print $3}')
+
+echo "✅ Token Mint Created: $MINT"
+
+# Create metadata (using Metaplex)
+echo "Creating token metadata..."
+metaplex create-metadata \
+  --mint $MINT \
+  --name "$TOKEN_NAME" \
+  --symbol "$TOKEN_SYMBOL" \
+  --uri "https://your-domain.com/metadata.json" \
+  --update-authority $(solana address)
+
+# Mint initial supply to your wallet
+echo "Minting initial supply..."
+spl-token mint $MINT $TOTAL_SUPPLY
+
+echo "🎉 Deployment Complete!"
+echo "Contract/Mint Address: $MINT"
+echo "Save this address!"<!-- Congrats on creating an Awesome list! 🎉 -->
 
 <!-- Please fill in the below placeholders -->
 
